@@ -2,14 +2,12 @@ import { useState } from 'react'
 import Counter from './components/Counter/Counter'
 
 import './App.css'
-import { isEven } from './api/parity'
 
 function App() {
   const [counters, setCounters] = useState([])
-
-  console.log(counters)
-
- 
+  const [countersSum, setCountersSum] = useState(0)
+  
+  console.log(countersSum)
   const addNewCounter = () => {
     let counter = {
       counterId: counters.length !== 0 ? counters.length : 0,
@@ -21,10 +19,13 @@ function App() {
   }
   const deleteAllCounters = () => {
     setCounters([])
+    setCountersSum(0)
+
   }
 
   const deleteCounter = (id) => {
-    setCounters(counters.filter(item => item.counterId !== id))
+    setCounters(counters.filter((item) => item.counterId !== id))
+    setCountersSum(0)
   }
 
   return (
@@ -38,18 +39,17 @@ function App() {
               <li key={item.counterId}>
                 <Counter
                   counterId={item.counterId}
-                  counterValue={item.counterValue}
-                  counterIsEven={item.counterIsEven}
                   deleteCounter={() => deleteCounter(item.counterId)}
                   counters={counters}
                   setCounters={setCounters}
+                  setCountersSum={setCountersSum}
                 />
               </li>
             )
           })}
       </div>
       <div>Количество счетчиков: {counters.length}</div>
-      <div>Сумма значений: {counters.reduce((prev, cur) => prev + +cur.counterValue, 0)}</div>
+      <div>Сумма значений:{countersSum}</div>
     </div>
   )
 }

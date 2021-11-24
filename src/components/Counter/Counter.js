@@ -1,53 +1,45 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { isEven } from '../../api/parity'
 
 const Counter = ({
   counterId,
-  counterValue,
-  counterIsEven,
   deleteCounter,
   counters,
   setCounters,
+  setCountersSum,
 }) => {
   const [value, setValue] = useState(0)
-  console.log(counters)
-  const onChange = (e) => {
-    setValue(e.target.value)
 
-    let index = counters.findIndex((item) => item.counterId === counterId)
-    counters[index] = {
-      counterId: counterId,
-      counterValue: e.target.value,
-      counterIsEven: isEven(e.target.value),
-    }
-    return counters
-  }
-
-  const increase = (id) => {
-    if (counters.find((item) => item.counterId === id)) {
-      setValue((prevState) => prevState + 1)
-      let index = counters.findIndex((item) => item.counterId === id)
+  useEffect(() => {
+    if (counters.find((item) => item.counterId === counterId)) {
+      let index = counters.findIndex((item) => item.counterId === counterId)
       counters[index] = {
         counterId,
         counterValue: value,
         counterIsEven: isEven(value),
       }
-      return counters
     }
+    setCounters(counters)
+    setCountersSum(counters.reduce((prev, cur) => prev + +cur.counterValue, 0))
+  }, [value, counters, counterId, setCounters, setCountersSum])
+
+  const onChange = (e) => {
+    setValue(e.target.value)
   }
 
-  const decrease = (id) => {
-    if (counters.find((item) => item.counterId === id)) {
-      setValue((prevState) => {
-        return prevState === 0 ? prevState : prevState - 1
-      })
-    }
+  const increase = () => {
+    setValue((prevState) => +prevState + 1)
+    console.log(counters)
   }
 
-  const reset = (id) => {
-    if (counters.find((item) => item.counterId === id)) {
-      setValue(0)
-    }
+  const decrease = () => {
+    setValue((prevState) => {
+      return prevState === 0 ? +prevState : +prevState - 1
+    })
+  }
+
+  const reset = () => {
+    setValue(0)
   }
 
   return (

@@ -3,35 +3,76 @@ import Counter from './components/Counter/Counter'
 
 import './App.css'
 
-function App() {
+const App = () => {
   const [counters, setCounters] = useState([])
   const [countersSum, setCountersSum] = useState(0)
+  console.log('mycounters',counters)
   
-  console.log(countersSum)
+
   const addNewCounter = () => {
-    let counter = {
+    const counter = {
       counterId: counters.length !== 0 ? counters.length : 0,
       counterValue: 0,
       counterIsEven: true,
     }
 
-    setCounters(counters.concat(counter))
-  }
-  const deleteAllCounters = () => {
-    setCounters([])
-    setCountersSum(0)
+    const updatedCounters = [...counters].concat(counter)
+    increaseEvenCounters(updatedCounters)
+    setCounters(updatedCounters);
+
 
   }
 
   const deleteCounter = (id) => {
-    setCounters(counters.filter((item) => item.counterId !== id))
+    const updatedCounters = [...counters].filter(
+      (item) => item.counterId !== id
+    )
+    decreaseOddCounters(updatedCounters)
+    setCounters(updatedCounters);
+
+  }
+
+  const deleteAllCounters = () => {
+    setCounters([])
     setCountersSum(0)
+  }
+
+  const increaseEvenCounters = (updatedCounters) => {
+    const updatedCountersEven = updatedCounters.map((counter) => {
+      const counterCopy = { ...counter }
+      if (counterCopy.counterIsEven) {
+        counterCopy.counterValue += 1
+        counterCopy.counterIsEven = false
+        console.log('2 ', counterCopy)
+      }
+      console.log('counterCopy ', counterCopy)
+      return { ...counterCopy }
+    })
+
+    console.log('updatedCountersEven ', updatedCountersEven)
+
+  }
+
+  const decreaseOddCounters = (updatedCounters) => {
+    const updatedCountersOdd = updatedCounters.map((counter) => {
+      const counterCopy = { ...counter }
+      if (!counterCopy.counterIsEven) {
+        counterCopy.counterValue -= 1
+        counterCopy.counterIsEven = true
+        console.log('2 ', counterCopy)
+      }
+      console.log('counterCopy ', counterCopy)
+      return { ...counterCopy }
+    })
+
+    console.log('updatedCountersOdd ', updatedCountersOdd)
+
   }
 
   return (
     <div className="App">
       <button onClick={addNewCounter}>Add Counter</button>
-      <button onClick={deleteAllCounters}>Reset</button>
+      <button onClick={deleteAllCounters}>Reset Counters</button>
       <div>
         {counters &&
           counters.map((item) => {

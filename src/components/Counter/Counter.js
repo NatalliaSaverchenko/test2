@@ -15,7 +15,7 @@ const Counter = ({
       let index = counters.findIndex((item) => item.counterId === counterId)
       counters[index] = {
         counterId,
-        counterValue: value,
+        counterValue: +value,
         counterIsEven: isEven(value),
       }
     }
@@ -29,7 +29,6 @@ const Counter = ({
 
   const increase = () => {
     setValue((prevState) => +prevState + 1)
-    console.log(counters)
   }
 
   const decrease = () => {

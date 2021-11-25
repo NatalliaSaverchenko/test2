@@ -18,9 +18,6 @@ const App = () => {
 
     const updatedCounters = [...counters].concat(counter)
     increaseEvenCounters(updatedCounters)
-    setCounters(updatedCounters);
-
-
   }
 
   const deleteCounter = (id) => {
@@ -28,8 +25,6 @@ const App = () => {
       (item) => item.counterId !== id
     )
     decreaseOddCounters(updatedCounters)
-    setCounters(updatedCounters);
-
   }
 
   const deleteAllCounters = () => {
@@ -48,6 +43,7 @@ const App = () => {
       console.log('counterCopy ', counterCopy)
       return { ...counterCopy }
     })
+    setCounters(updatedCounters);
 
     console.log('updatedCountersEven ', updatedCountersEven)
 
@@ -64,6 +60,7 @@ const App = () => {
       console.log('counterCopy ', counterCopy)
       return { ...counterCopy }
     })
+    setCounters(updatedCounters);
 
     console.log('updatedCountersOdd ', updatedCountersOdd)
 

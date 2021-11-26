@@ -1,29 +1,33 @@
 import { useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import Counter from '../Counter/Counter'
-
+import { isEven } from '../../api/parity'
 
 const CountersList = () => {
   const [counters, setCounters] = useState([])
   const [countersSum, setCountersSum] = useState(0)
-  console.log('mycounters',counters)
-  
+  console.log('mycounters', counters)
 
   const addNewCounter = () => {
     const counter = {
-      counterId: counters.length !== 0 ? counters.length : 0,
+      counterId: uuidv4(),
       counterValue: 0,
       counterIsEven: true,
     }
 
-    const updatedCounters = [...counters].concat(counter)
-    increaseEvenCounters(updatedCounters)
+    const countersCopy = [...counters]
+    countersCopy.push(counter)
+    increaseEvenCounters(countersCopy)
   }
 
   const deleteCounter = (id) => {
-    const updatedCounters = [...counters].filter(
-      (item) => item.counterId !== id
+    const countersCopy = [...counters]
+    const counterIndex = countersCopy.findIndex(
+      (counter) => counter.counterId === id
     )
-    decreaseOddCounters(updatedCounters)
+    const firstDiff = [...counters][counterIndex].counterValue
+    countersCopy.splice(counterIndex, 1)
+    decreaseOddCounters(countersCopy, firstDiff)
   }
 
   const deleteAllCounters = () => {
@@ -32,39 +36,55 @@ const CountersList = () => {
   }
 
   const increaseEvenCounters = (updatedCounters) => {
-    const updatedCountersEven = updatedCounters.map((counter) => {
+    let diff = 0
+    let lastIndex = updatedCounters.length - 1
+    const updatedCountersEven = updatedCounters.map((counter, index) => {
       const counterCopy = { ...counter }
-      if (counterCopy.counterIsEven) {
+      if (counterCopy.counterIsEven && index !== lastIndex) {
         counterCopy.counterValue += 1
         counterCopy.counterIsEven = false
-        console.log('2 ', counterCopy)
+        diff += 1
       }
-      console.log('counterCopy ', counterCopy)
-      return { ...counterCopy }
+      return counterCopy
     })
-    setCounters(updatedCounters);
 
-    console.log('updatedCountersEven ', updatedCountersEven)
-
+    changeCountersSum(diff)
+    setCounters(updatedCountersEven)
   }
 
-  const decreaseOddCounters = (updatedCounters) => {
+  const decreaseOddCounters = (updatedCounters, firstDiff) => {
+    let diff = -firstDiff
     const updatedCountersOdd = updatedCounters.map((counter) => {
       const counterCopy = { ...counter }
       if (!counterCopy.counterIsEven) {
         counterCopy.counterValue -= 1
         counterCopy.counterIsEven = true
-        console.log('2 ', counterCopy)
+        diff -= 1
       }
-      console.log('counterCopy ', counterCopy)
-      return { ...counterCopy }
+      return counterCopy
     })
-    setCounters(updatedCounters);
 
-    console.log('updatedCountersOdd ', updatedCountersOdd)
-
+    changeCountersSum(diff)
+    setCounters(updatedCountersOdd)
   }
-  
+  const changeCounter = (id, value, diff) => {
+    const counterIndex = counters.findIndex(
+      (counter) => counter.counterId === id
+    )
+    changeCountersSum(diff)
+    setCounters((prevstate) => {
+      prevstate[counterIndex].counterValue = value
+      prevstate[counterIndex].counterIsEven = isEven(value)
+      return prevstate
+    })
+  }
+
+  const changeCountersSum = (diff) => {
+    setCountersSum((prevstate) => {
+      prevstate += diff
+      return prevstate
+    })
+  }
 
   return (
     <div className="App">
@@ -72,22 +92,21 @@ const CountersList = () => {
       <button onClick={deleteAllCounters}>Reset Counters</button>
       <div>
         {counters &&
-          counters.map((item) => {
+          counters.map((counter) => {
+            const { counterId } = counter
             return (
-              <li key={item.counterId}>
+              <li key={counterId}>
                 <Counter
-                  counterId={item.counterId}
-                  deleteCounter={() => deleteCounter(item.counterId)}
-                  counters={counters}
-                  setCounters={setCounters}
-                  setCountersSum={setCountersSum}
+                  counter={counter}
+                  deleteCounter={deleteCounter}
+                  changeCounter={changeCounter}
                 />
               </li>
             )
           })}
       </div>
       <div>Количество счетчиков: {counters.length}</div>
-      <div>Сумма значений:{countersSum}</div>
+      <div>Сумма значений: {countersSum}</div>
     </div>
   )
 }

@@ -1,66 +1,57 @@
-import { useEffect, useState } from 'react'
 import { isEven } from '../../api/parity'
-
-const Counter = ({
-  counterId,
-  deleteCounter,
-  counters,
-  setCounters,
-  setCountersSum,
-}) => {
-  const [value, setValue] = useState(0)
-
-  useEffect(() => {
-    if (counters.find((item) => item.counterId === counterId)) {
-      let index = counters.findIndex((item) => item.counterId === counterId)
-      counters[index] = {
-        counterId,
-        counterValue: +value,
-        counterIsEven: isEven(value),
-      }
-    }
-    setCounters(counters)
-    setCountersSum(counters.reduce((prev, cur) => prev + +cur.counterValue, 0))
-  }, [value, counters, counterId, setCounters, setCountersSum])
+const Counter = ({ counter, deleteCounter, changeCounter }) => {
+  const { counterId, counterValue } = counter
 
   const onChange = (e) => {
-    setValue(e.target.value)
+    const { counterId } = counter
+    const value = Number(e.target.value)
+    const diff = value - Number(counterValue)
+    changeCounter(counterId, value, diff)
   }
 
   const increase = () => {
-    setValue((prevState) => +prevState + 1)
+    const { counterId, counterValue } = counter
+    const counterValueNumber = Number(counterValue)
+    const updatedValue = counterValueNumber + 1
+    const diff = 1
+    changeCounter(counterId, updatedValue, diff)
   }
 
   const decrease = () => {
-    setValue((prevState) => {
-      return prevState === 0 ? +prevState : +prevState - 1
-    })
+    const { counterId, counterValue } = counter
+    const counterValueNumber = Number(counterValue)
+    const updatedValue =
+      counterValueNumber === 0 ? counterValueNumber : counterValueNumber - 1
+    const diff = counterValueNumber === 0 ? 0 : -1
+    changeCounter(counterId, updatedValue, diff)
   }
 
   const reset = () => {
-    setValue(0)
+    const updatedValue = 0
+    const diff = -counterValue
+    changeCounter(counterId, updatedValue, diff)
   }
 
   return (
     <div className="counterContainer">
       <div className="counterInput">
-        <input onChange={onChange} value={value}></input>
+        <input onChange={onChange} value={counterValue}></input>
         <label>{`Введено ${
-          isEven(value) ? `чётное` : `нечётное`
+          isEven(counterValue) ? `чётное` : `нечётное`
         } число`}</label>
       </div>
       <div className="counterPannel">
-        <button className="decrease" onClick={() => decrease(counterId)}>
+        <button className="decrease" onClick={decrease}>
           -
         </button>
-        <button className="reset" onClick={() => reset(counterId)}>
+        <button className="reset" onClick={reset}>
           Reset
         </button>
-        <button className="increase" onClick={() => increase(counterId)}>
+        <button className="increase" onClick={increase}>
           +
         </button>
       </div>
-      <button onClick={deleteCounter}>Delete counter</button>
+      <button onClick={() => deleteCounter(counterId)}>Delete counter</button>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { isEven } from '../../api/parity'
+import './Counter.css'
 const Counter = ({ counter, deleteCounter, changeCounter }) => {
   const { counterId, counterValue } = counter
 
@@ -51,7 +52,9 @@ const Counter = ({ counter, deleteCounter, changeCounter }) => {
           +
         </button>
       </div>
-      <button onClick={() => deleteCounter(counterId)}>Delete counter</button>
+      <div className="delete">
+        <button onClick={() => deleteCounter(counterId)}>Delete counter</button>
+      </div>
     </div>
   )
 }

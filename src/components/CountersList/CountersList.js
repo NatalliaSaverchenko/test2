@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import Counter from '../Counter/Counter'
 import { isEven } from '../../api/parity'
+import './CountersList.css'
 
 const CountersList = () => {
   const [counters, setCounters] = useState([])
@@ -87,10 +88,12 @@ const CountersList = () => {
   }
 
   return (
-    <div className="App">
-      <button onClick={addNewCounter}>Add Counter</button>
-      <button onClick={deleteAllCounters}>Reset Counters</button>
-      <div>
+    <div className="app">
+      <button className="btn" onClick={addNewCounter}>Add Counter</button>
+      <button className="btn" onClick={deleteAllCounters}>Reset Counters</button>
+      <div>Количество счетчиков: {counters.length}</div>
+      <div>Сумма значений: {countersSum}</div>
+      <div className="app-counterslist">
         {counters &&
           counters.map((counter) => {
             const { counterId } = counter
@@ -105,8 +108,6 @@ const CountersList = () => {
             )
           })}
       </div>
-      <div>Количество счетчиков: {counters.length}</div>
-      <div>Сумма значений: {countersSum}</div>
     </div>
   )
 }

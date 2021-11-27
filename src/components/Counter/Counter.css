@@ -1,0 +1,72 @@
+.counterContainer {
+    border: 1px solid black;
+    background-color: white;
+    width: 280px;
+    height: 200px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+ .counterInput {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 15px;
+ }
+ .counterInput input {
+    width: 100px;
+    height: 35px;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+ }
+ .counterInput label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    height: 25px;
+    font-size: 16px;
+    padding: 3px;
+    border: 1px solid black;
+ }
+ .counterPannel {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    width: 220px;
+ }
+ .counterPannel button {
+    width: 100px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid black;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer;
+ 
+ }
+ .counterPannel .reset {
+   font-size: 16px;
+ 
+ }
+ .delete {
+   display: flex;
+   justify-content: center;
+   margin-top: 10px;
+
+
+}
+.delete button {
+   border-radius: 35px;
+   background-color: white;
+   padding: 5px;
+   font-size: 14px;
+   cursor: pointer;
+
+}
